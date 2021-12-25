@@ -1,0 +1,624 @@
+{
+    "updateTime": 1640412006925,
+    "modes": {
+        "regular": [
+            {
+                "startTime": 1640412000,
+                "endTime": 1640419200,
+                "maps": [
+                    "Arowana Mall",
+                    "Manta Maria"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War"
+                },
+                "mode": {
+                    "name": "Regular Battle",
+                    "key": "regular"
+                }
+            },
+            {
+                "startTime": 1640419200,
+                "endTime": 1640426400,
+                "maps": [
+                    "Shellendorf Institute",
+                    "Kelp Dome"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640426400,
+                "endTime": 1640433600,
+                "maps": [
+                    "Snapper Canal",
+                    "Moray Towers"
+                ],
+                "rule": {
+                    "name": "Turf War",
+                    "multiline_name": "Turf\nWar",
+                    "key": "turf_war"
+                },
+                "mode": {
+                    "name": "Regular Battle",
+                    "key": "regular"
+                }
+            },
+            {
+                "startTime": 1640433600,
+                "endTime": 1640440800,
+                "maps": [
+                    "Port Mackerel",
+                    "Walleye Warehouse"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "name": "Turf War",
+                    "multiline_name": "Turf\nWar"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640440800,
+                "endTime": 1640448000,
+                "maps": [
+                    "Wahoo World",
+                    "New Albacore Hotel"
+                ],
+                "rule": {
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War",
+                    "key": "turf_war"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640448000,
+                "endTime": 1640455200,
+                "maps": [
+                    "The Reef",
+                    "Ancho-V Games"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "name": "Turf War",
+                    "multiline_name": "Turf\nWar"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640455200,
+                "endTime": 1640462400,
+                "maps": [
+                    "Musselforge Fitness",
+                    "Goby Arena"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640462400,
+                "endTime": 1640469600,
+                "maps": [
+                    "MakoMart",
+                    "Skipper Pavilion"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War"
+                },
+                "mode": {
+                    "name": "Regular Battle",
+                    "key": "regular"
+                }
+            },
+            {
+                "startTime": 1640469600,
+                "endTime": 1640476800,
+                "maps": [
+                    "Camp Triggerfish",
+                    "Starfish Mainstage"
+                ],
+                "rule": {
+                    "key": "turf_war",
+                    "name": "Turf War",
+                    "multiline_name": "Turf\nWar"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640476800,
+                "endTime": 1640484000,
+                "maps": [
+                    "Blackbelly Skatepark",
+                    "Humpback Pump Track"
+                ],
+                "rule": {
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War",
+                    "key": "turf_war"
+                },
+                "mode": {
+                    "name": "Regular Battle",
+                    "key": "regular"
+                }
+            },
+            {
+                "startTime": 1640484000,
+                "endTime": 1640491200,
+                "maps": [
+                    "Port Mackerel",
+                    "Piranha Pit"
+                ],
+                "rule": {
+                    "multiline_name": "Turf\nWar",
+                    "name": "Turf War",
+                    "key": "turf_war"
+                },
+                "mode": {
+                    "key": "regular",
+                    "name": "Regular Battle"
+                }
+            },
+            {
+                "startTime": 1640491200,
+                "endTime": 1640498400,
+                "maps": [
+                    "Sturgeon Shipyard",
+                    "Manta Maria"
+                ],
+                "rule": {
+                    "name": "Turf War",
+                    "multiline_name": "Turf\nWar",
+                    "key": "turf_war"
+                },
+                "mode": {
+                    "name": "Regular Battle",
+                    "key": "regular"
+                }
+            }
+        ],
+        "gachi": [
+            {
+                "startTime": 1640412000,
+                "endTime": 1640419200,
+                "maps": [
+                    "Inkblot Art Academy",
+                    "Snapper Canal"
+                ],
+                "rule": {
+                    "key": "clam_blitz",
+                    "multiline_name": "Clam\nBlitz",
+                    "name": "Clam Blitz"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640419200,
+                "endTime": 1640426400,
+                "maps": [
+                    "Camp Triggerfish",
+                    "MakoMart"
+                ],
+                "rule": {
+                    "multiline_name": "Tower\nControl",
+                    "name": "Tower Control",
+                    "key": "tower_control"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640426400,
+                "endTime": 1640433600,
+                "maps": [
+                    "Skipper Pavilion",
+                    "Musselforge Fitness"
+                ],
+                "rule": {
+                    "name": "Splat Zones",
+                    "multiline_name": "Splat\nZones",
+                    "key": "splat_zones"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640433600,
+                "endTime": 1640440800,
+                "maps": [
+                    "The Reef",
+                    "New Albacore Hotel"
+                ],
+                "rule": {
+                    "name": "Clam Blitz",
+                    "multiline_name": "Clam\nBlitz",
+                    "key": "clam_blitz"
+                },
+                "mode": {
+                    "name": "Ranked Battle",
+                    "key": "gachi"
+                }
+            },
+            {
+                "startTime": 1640440800,
+                "endTime": 1640448000,
+                "maps": [
+                    "MakoMart",
+                    "Arowana Mall"
+                ],
+                "rule": {
+                    "key": "rainmaker",
+                    "name": "Rainmaker",
+                    "multiline_name": "Rainmaker"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640448000,
+                "endTime": 1640455200,
+                "maps": [
+                    "Starfish Mainstage",
+                    "Sturgeon Shipyard"
+                ],
+                "rule": {
+                    "key": "tower_control",
+                    "multiline_name": "Tower\nControl",
+                    "name": "Tower Control"
+                },
+                "mode": {
+                    "name": "Ranked Battle",
+                    "key": "gachi"
+                }
+            },
+            {
+                "startTime": 1640455200,
+                "endTime": 1640462400,
+                "maps": [
+                    "Ancho-V Games",
+                    "Humpback Pump Track"
+                ],
+                "rule": {
+                    "multiline_name": "Splat\nZones",
+                    "name": "Splat Zones",
+                    "key": "splat_zones"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640462400,
+                "endTime": 1640469600,
+                "maps": [
+                    "Manta Maria",
+                    "Inkblot Art Academy"
+                ],
+                "rule": {
+                    "key": "rainmaker",
+                    "multiline_name": "Rainmaker",
+                    "name": "Rainmaker"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640469600,
+                "endTime": 1640476800,
+                "maps": [
+                    "Shellendorf Institute",
+                    "Goby Arena"
+                ],
+                "rule": {
+                    "key": "clam_blitz",
+                    "name": "Clam Blitz",
+                    "multiline_name": "Clam\nBlitz"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            },
+            {
+                "startTime": 1640476800,
+                "endTime": 1640484000,
+                "maps": [
+                    "Kelp Dome",
+                    "Piranha Pit"
+                ],
+                "rule": {
+                    "name": "Tower Control",
+                    "multiline_name": "Tower\nControl",
+                    "key": "tower_control"
+                },
+                "mode": {
+                    "name": "Ranked Battle",
+                    "key": "gachi"
+                }
+            },
+            {
+                "startTime": 1640484000,
+                "endTime": 1640491200,
+                "maps": [
+                    "Wahoo World",
+                    "MakoMart"
+                ],
+                "rule": {
+                    "name": "Rainmaker",
+                    "multiline_name": "Rainmaker",
+                    "key": "rainmaker"
+                },
+                "mode": {
+                    "name": "Ranked Battle",
+                    "key": "gachi"
+                }
+            },
+            {
+                "startTime": 1640491200,
+                "endTime": 1640498400,
+                "maps": [
+                    "Moray Towers",
+                    "Port Mackerel"
+                ],
+                "rule": {
+                    "name": "Splat Zones",
+                    "multiline_name": "Splat\nZones",
+                    "key": "splat_zones"
+                },
+                "mode": {
+                    "key": "gachi",
+                    "name": "Ranked Battle"
+                }
+            }
+        ],
+        "league": [
+            {
+                "startTime": 1640412000,
+                "endTime": 1640419200,
+                "maps": [
+                    "The Reef",
+                    "Skipper Pavilion"
+                ],
+                "rule": {
+                    "key": "rainmaker",
+                    "name": "Rainmaker",
+                    "multiline_name": "Rainmaker"
+                },
+                "mode": {
+                    "key": "league",
+                    "name": "League Battle"
+                }
+            },
+            {
+                "startTime": 1640419200,
+                "endTime": 1640426400,
+                "maps": [
+                    "Walleye Warehouse",
+                    "Snapper Canal"
+                ],
+                "rule": {
+                    "key": "clam_blitz",
+                    "multiline_name": "Clam\nBlitz",
+                    "name": "Clam Blitz"
+                },
+                "mode": {
+                    "name": "League Battle",
+                    "key": "league"
+                }
+            },
+            {
+                "startTime": 1640426400,
+                "endTime": 1640433600,
+                "maps": [
+                    "Ancho-V Games",
+                    "Sturgeon Shipyard"
+                ],
+                "rule": {
+                    "multiline_name": "Tower\nControl",
+                    "name": "Tower Control",
+                    "key": "tower_control"
+                },
+                "mode": {
+                    "key": "league",
+                    "name": "League Battle"
+                }
+            },
+            {
+                "startTime": 1640433600,
+                "endTime": 1640440800,
+                "maps": [
+                    "Inkblot Art Academy",
+                    "Blackbelly Skatepark"
+                ],
+                "rule": {
+                    "key": "rainmaker",
+                    "multiline_name": "Rainmaker",
+                    "name": "Rainmaker"
+                },
+                "mode": {
+                    "name": "League Battle",
+                    "key": "league"
+                }
+            },
+            {
+                "startTime": 1640440800,
+                "endTime": 1640448000,
+                "maps": [
+                    "Camp Triggerfish",
+                    "Musselforge Fitness"
+                ],
+                "rule": {
+                    "multiline_name": "Clam\nBlitz",
+                    "name": "Clam Blitz",
+                    "key": "clam_blitz"
+                },
+                "mode": {
+                    "key": "league",
+                    "name": "League Battle"
+                }
+            },
+            {
+                "startTime": 1640448000,
+                "endTime": 1640455200,
+                "maps": [
+                    "Wahoo World",
+                    "Blackbelly Skatepark"
+                ],
+                "rule": {
+                    "name": "Splat Zones",
+                    "multiline_name": "Splat\nZones",
+                    "key": "splat_zones"
+                },
+                "mode": {
+                    "key": "league",
+                    "name": "League Battle"
+                }
+            },
+            {
+                "startTime": 1640455200,
+                "endTime": 1640462400,
+                "maps": [
+                    "New Albacore Hotel",
+                    "Kelp Dome"
+                ],
+                "rule": {
+                    "key": "tower_control",
+                    "multiline_name": "Tower\nControl",
+                    "name": "Tower Control"
+                },
+                "mode": {
+                    "key": "league",
+                    "name": "League Battle"
+                }
+            },
+            {
+                "startTime": 1640462400,
+                "endTime": 1640469600,
+                "maps": [
+                    "Shellendorf Institute",
+                    "Starfish Mainstage"
+                ],
+                "rule": {
+                    "key": "splat_zones",
+                    "multiline_name": "Splat\nZones",
+                    "name": "Splat Zones"
+                },
+                "mode": {
+                    "name": "League Battle",
+                    "key": "league"
+                }
+            },
+            {
+                "startTime": 1640469600,
+                "endTime": 1640476800,
+                "maps": [
+                    "Inkblot Art Academy",
+                    "Humpback Pump Track"
+                ],
+                "rule": {
+                    "multiline_name": "Rainmaker",
+                    "name": "Rainmaker",
+                    "key": "rainmaker"
+                },
+                "mode": {
+                    "name": "League Battle",
+                    "key": "league"
+                }
+            },
+            {
+                "startTime": 1640476800,
+                "endTime": 1640484000,
+                "maps": [
+                    "Port Mackerel",
+                    "The Reef"
+                ],
+                "rule": {
+                    "key": "clam_blitz",
+                    "multiline_name": "Clam\nBlitz",
+                    "name": "Clam Blitz"
+                },
+                "mode": {
+                    "name": "League Battle",
+                    "key": "league"
+                }
+            },
+            {
+                "startTime": 1640484000,
+                "endTime": 1640491200,
+                "maps": [
+                    "Manta Maria",
+                    "Skipper Pavilion"
+                ],
+                "rule": {
+                    "key": "tower_control",
+                    "name": "Tower Control",
+                    "multiline_name": "Tower\nControl"
+                },
+                "mode": {
+                    "name": "League Battle",
+                    "key": "league"
+                }
+            },
+            {
+                "startTime": 1640491200,
+                "endTime": 1640498400,
+                "maps": [
+                    "Piranha Pit",
+                    "Arowana Mall"
+                ],
+                "rule": {
+                    "name": "Rainmaker",
+                    "multiline_name": "Rainmaker",
+                    "key": "rainmaker"
+                },
+                "mode": {
+                    "key": "league",
+                    "name": "League Battle"
+                }
+            }
+        ]
+    },
+    "splatfests": []
+}
