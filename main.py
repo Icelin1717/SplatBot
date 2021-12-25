@@ -1,4 +1,3 @@
-from functools import update_wrapper
 import discord
 from discord.ext import commands, tasks
 from debug_command import Debug_Command
