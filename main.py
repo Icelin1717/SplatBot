@@ -21,6 +21,7 @@ with open('json\\user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 # * function and variable
 
 last_schedule_timestamp = None
+first_loop_flag = True
 
 def get_map_name(m):
     if m in find_map:
@@ -146,52 +147,21 @@ async def show_liked_map(ctx):
             bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
     await ctx.reply(bot_message)
 
-@splatbot.command()
-async def debug_alarm(ctx):
-    url = requests.get(setting['schedule_url'])
-    schedule = json.loads(url.text)
-
-    # global last_schedule_timestamp
-    
-    # if last_schedule_timestamp == schedule['modes']['regular'][0]['startTime']:
-    #     return
-
-    maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
-    maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
-    time_gachi = datetime.datetime.fromtimestamp(schedule['modes']['gachi'][1]['startTime'])
-    alarm_channel = splatbot.get_channel(setting['alarm_channel_id'])
-    image_flag = False  # whether show the map image
-
-    bot_message = ''
-
-    for user_id in user_data:
-        if user_data[user_id]['likedmap'] & map_enum[maps_gachi1] > 0 \
-        or user_data[user_id]['likedmap'] & map_enum[maps_gachi2] > 0:
-            image_flag = True
-            user = await splatbot.fetch_user(int(user_id))
-            bot_message += f'{user.mention} '
-            
-
-    if image_flag:
-        filename1 = 'images\\' + maps_gachi1.replace(' ', '') + '.png'
-        filename2 = 'images\\' + maps_gachi2.replace(' ', '') + '.png'
-        image1 = discord.File(filename1)
-        image2 = discord.File(filename2)
-        bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}的場地不錯喔!'
-        await alarm_channel.send(bot_message)
-        await alarm_channel.send(files=[image1, image2])
-
-@tasks.loop(seconds = 10)
+# * alarm loop
+@tasks.loop(minutes = 1)
 async def game_alarm():
+    
     await splatbot.wait_until_ready()
     url = requests.get(setting['schedule_url'])
     schedule = json.loads(url.text)
 
-    global last_schedule_timestamp
-    print(f'last_schedule_timestamp = {last_schedule_timestamp}')
+    global last_schedule_timestamp, first_loop_flag
     if last_schedule_timestamp == schedule['modes']['regular'][0]['startTime']:
         return
     last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
+    if first_loop_flag:
+        first_loop_flag = False
+        return
     
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
