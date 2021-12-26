@@ -26,20 +26,22 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 last_schedule_timestamp = None
 first_loop_flag = True
 schedule = None
+alarm_trigger = False
 alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!', '該來打了吧?', '很期待你直播欸!']
 
 def check_schedule_update():
-    global last_schedule_timestamp
+    global last_schedule_timestamp, alarm_trigger
     current_timestamp = int(datetime.datetime.now().timestamp())
+
     if last_schedule_timestamp == None or math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
         global schedule
         url = requests.get(setting['schedule_url'])
         schedule = json.loads(url.text)
         last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
         print(' - a GET request is called to retrieve the schedule')
-        return True
+        alarm_trigger = True
     else:
-        return False
+        alarm_trigger = False
 
 def get_map_name(m):
     if m in find_map:
@@ -176,16 +178,20 @@ async def show_liked_map(ctx):
     await ctx.reply(bot_message)
 
 # * alarm loop
-@tasks.loop(minutes = 10)
+@tasks.loop(minutes = 5)
 async def game_alarm():
     
     await splatbot.wait_until_ready()
-    global first_loop_flag
-    if check_schedule_update() == False:
+    global first_loop_flag, alarm_trigger
+    
+    check_schedule_update()
+
+    if alarm_trigger == False:
         return
     elif first_loop_flag == True:
         first_loop_flag = False
         return
+    alarm_trigger = False
     
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
