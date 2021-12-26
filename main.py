@@ -4,6 +4,8 @@ from debug_command import Debug_Command
 import requests
 import json
 import datetime
+import math
+import random
 
 
 # * load essential json file
@@ -21,6 +23,21 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 
 last_schedule_timestamp = None
 first_loop_flag = True
+schedule = None
+alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!']
+
+def check_schedule_update():
+    global last_schedule_timestamp
+    current_timestamp = int(datetime.datetime.now().timestamp())
+    if last_schedule_timestamp == None or math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
+        global schedule
+        url = requests.get(setting['schedule_url'])
+        schedule = json.loads(url.text)
+        last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
+        print(' - a GET request is called to retrieve the schedule')
+        return True
+    else:
+        return False
 
 def get_map_name(m):
     if m in find_map:
@@ -38,19 +55,15 @@ splatbot = commands.Bot(command_prefix = '$',intents = intents)
 # * init setup
 @splatbot.event
 async def on_ready():
-    url = requests.get(setting['schedule_url'])
-    schedule = json.loads(url.text)
-
-    global last_schedule_timestamp
-    last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
-
+    
+    check_schedule_update()
     print('--- We have logged in as {0.user} ---'.format(splatbot))
 
 # * show current and next map schedule
 @splatbot.command(name='場地')
 async def info(ctx):
-    url = requests.get(setting['schedule_url'])
-    schedule = json.loads(url.text)
+
+    check_schedule_update()
 
     for i in [0, 1]:
         starttime = datetime.datetime.fromtimestamp(schedule['modes']['regular'][i]['startTime'])
@@ -147,18 +160,14 @@ async def show_liked_map(ctx):
     await ctx.reply(bot_message)
 
 # * alarm loop
-@tasks.loop(minutes = 1)
+@tasks.loop(minutes = 10)
 async def game_alarm():
     
     await splatbot.wait_until_ready()
-    url = requests.get(setting['schedule_url'])
-    schedule = json.loads(url.text)
-
-    global last_schedule_timestamp, first_loop_flag
-    if last_schedule_timestamp == schedule['modes']['regular'][0]['startTime']:
+    global first_loop_flag
+    if check_schedule_update() == False:
         return
-    last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
-    if first_loop_flag:
+    elif first_loop_flag == True:
         first_loop_flag = False
         return
     
@@ -183,7 +192,8 @@ async def game_alarm():
         filename2 = 'images/' + maps_gachi2.replace(' ', '') + '.png'
         image1 = discord.File(filename1)
         image2 = discord.File(filename2)
-        bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}的場地不錯喔!'
+        quote = random.choice(alarm_quote)
+        bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}的場地不錯喔!{quote}'
         await alarm_channel.send(bot_message)
         await alarm_channel.send(files=[image1, image2])
 
