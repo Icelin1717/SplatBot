@@ -1,5 +1,3 @@
-# version 1.0.1
-
 import discord
 from discord.ext import commands, tasks
 from debug_command import Debug_Command
@@ -24,13 +22,14 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 # * function and variable
 
 last_schedule_timestamp = None
-first_loop_flag = True
+
 schedule = None
 alarm_trigger = False
+schedule_first_check = True
 alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!', '該來打了吧?', '很期待你直播欸!']
 
 def check_schedule_update():
-    global last_schedule_timestamp, alarm_trigger
+    global last_schedule_timestamp, alarm_trigger, schedule_first_check
     current_timestamp = int(datetime.datetime.now().timestamp())
 
     if last_schedule_timestamp == None or math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
@@ -40,8 +39,12 @@ def check_schedule_update():
         last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
         print(' - a GET request is called to retrieve the schedule')
         alarm_trigger = True
+    
+    if schedule_first_check == True:
+        schedule_first_check = False
+        return True
     else:
-        alarm_trigger = False
+        return False
 
 def get_map_name(m):
     if m in find_map:
@@ -59,8 +62,6 @@ splatbot = commands.Bot(command_prefix = '$',intents = intents)
 # * init setup
 @splatbot.event
 async def on_ready():
-    
-    check_schedule_update()
     print('--- We have logged in as {0.user} ---'.format(splatbot))
 
 # * chinese help
@@ -84,8 +85,8 @@ async def info(ctx):
     check_schedule_update()
 
     for i in [0, 1]:
-        starttime = datetime.datetime.fromtimestamp(schedule['modes']['regular'][i]['startTime'])
-        endtime = datetime.datetime.fromtimestamp(schedule['modes']['regular'][i]['endTime'])
+        starttime = datetime.datetime.fromtimestamp(schedule['modes']['regular'][i]['startTime'] + setting['timezone_delta'])
+        endtime = datetime.datetime.fromtimestamp(schedule['modes']['regular'][i]['endTime'] + setting['timezone_delta'])
         
         maps_regular = schedule['modes']['regular'][i]['maps']
         maps_gachi = schedule['modes']['gachi'][i]['maps']
@@ -182,20 +183,20 @@ async def show_liked_map(ctx):
 async def game_alarm():
     
     await splatbot.wait_until_ready()
-    global first_loop_flag, alarm_trigger
+    global alarm_trigger
     
-    check_schedule_update()
+    first_check = check_schedule_update()
 
     if alarm_trigger == False:
         return
-    elif first_loop_flag == True:
-        first_loop_flag = False
-        return
     alarm_trigger = False
-    
+
+    if first_check:
+        return
+
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
-    time_gachi = datetime.datetime.fromtimestamp(schedule['modes']['gachi'][1]['startTime'])
+    time_gachi = datetime.datetime.fromtimestamp(schedule['modes']['gachi'][1]['startTime'] + setting['timezone_delta'])
     alarm_channel = splatbot.get_channel(setting['alarm_channel_id'])
     image_flag = False  # whether show the map image
 
