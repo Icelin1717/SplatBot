@@ -23,11 +23,16 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 
 last_schedule_timestamp = None
 
+# A dict save the map info retrieved from url.
 schedule = None
+# Alarm happen when True. This is set to True when schedule updated successfully.
 alarm_trigger = False
+# A flag to ignore the first schedule update (schedule init) in alarm loop.
 schedule_first_check = True
+# Some funny quotes added in alarm.
 alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!', '該來打了吧?', '很期待你直播欸!']
 
+# schedule update handler
 def check_schedule_update():
     global last_schedule_timestamp, alarm_trigger, schedule_first_check
     current_timestamp = int(datetime.datetime.now().timestamp())
@@ -46,12 +51,14 @@ def check_schedule_update():
     else:
         return False
 
+# Translate user-named map into standard map name
 def get_map_name(m):
     if m in find_map:
         return find_map[m]
     else:
         return '.'
 
+# User data saving handler
 def save_user_data():
     with open('json/user_data.json', mode = 'w', encoding = 'utf8') as jdata:
         json.dump(user_data, jdata)
@@ -59,12 +66,12 @@ def save_user_data():
 intents = discord.Intents.default()
 splatbot = commands.Bot(command_prefix = '$',intents = intents)
 
-# * init setup
+# Init setup
 @splatbot.event
 async def on_ready():
     print('--- We have logged in as {0.user} ---'.format(splatbot))
 
-# * chinese help
+# Chinese help
 @splatbot.command(name='說明')
 async def usage(ctx):
     await ctx.send(
@@ -78,7 +85,7 @@ async def usage(ctx):
         + 'SplatBot會在您喜歡的場地出現在真劍時通知您，必要時也會情勒您。```' \
     )
 
-# * show current and next map schedule
+# Show current and next map schedule
 @splatbot.command(name='場地')
 async def info(ctx):
 
@@ -101,7 +108,7 @@ async def info(ctx):
 
         await ctx.send(timerange_str + regular_str + gachi_str + league_str)
 
-# * add liked map for a user
+# Add liked map for a user
 @splatbot.command(name='新增')
 async def add_liked_map(ctx, *args):
     user_id = str(ctx.author.id)
@@ -130,7 +137,7 @@ async def add_liked_map(ctx, *args):
     await ctx.reply(bot_message)
     save_user_data()
 
-# * remove liked map for a user
+# Remove liked map for a user
 @splatbot.command(name='移除')
 async def rm_liked_map(ctx, *args):
     user_id = str(ctx.author.id)
@@ -159,7 +166,7 @@ async def rm_liked_map(ctx, *args):
     await ctx.reply(bot_message)
     save_user_data()
 
-# * display user's liked map
+# Display user's liked map
 @splatbot.command(name='喜愛')
 async def show_liked_map(ctx):
     user_id = str(ctx.author.id)
@@ -178,9 +185,9 @@ async def show_liked_map(ctx):
             bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
     await ctx.reply(bot_message)
 
-# * alarm loop
+# Gachi alarm loop
 @tasks.loop(minutes = 5)
-async def game_alarm():
+async def gachi_alarm():
     
     await splatbot.wait_until_ready()
     global alarm_trigger
@@ -222,5 +229,5 @@ async def game_alarm():
 
 if __name__ == '__main__':
     splatbot.add_cog(Debug_Command(splatbot))
-    game_alarm.start()
+    gachi_alarm.start()
     splatbot.run(setting['TOKEN'])
