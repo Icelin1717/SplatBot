@@ -178,7 +178,7 @@ async def show_liked_map(ctx):
     await ctx.reply(bot_message)
 
 # * alarm loop
-@tasks.loop(minutes = 2)
+@tasks.loop(minutes = 5)
 async def game_alarm():
     
     await splatbot.wait_until_ready()
