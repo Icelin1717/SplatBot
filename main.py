@@ -24,7 +24,7 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 last_schedule_timestamp = None
 first_loop_flag = True
 schedule = None
-alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!']
+alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!', '該來打了吧?', '很期待你直播欸!']
 
 def check_schedule_update():
     global last_schedule_timestamp
@@ -58,6 +58,20 @@ async def on_ready():
     
     check_schedule_update()
     print('--- We have logged in as {0.user} ---'.format(splatbot))
+
+# * chinese help
+@splatbot.command(name='說明')
+async def usage(ctx):
+    await ctx.send(
+        '```$場地 : 顯示現在以及下一次的場地 \n' \
+        + '$新增 : 新增喜愛的場地 \n' \
+        + ' - 用法 : $新增 [場地1] [場地2] [場地3]... \n' \
+        + '$移除 : 移除喜愛的場地 \n' \
+        + ' - 用法 : $移除 [場地1] [場地2] [場地3]... \n' \
+        + '$喜愛 : 顯示目前喜愛的場地列表 \n' \
+        + '\n' \
+        + 'SplatBot會在您喜歡的場地出現在真劍時通知您，必要時也會情勒您。```' \
+    )
 
 # * show current and next map schedule
 @splatbot.command(name='場地')
@@ -141,7 +155,7 @@ async def rm_liked_map(ctx, *args):
     save_user_data()
 
 # * display user's liked map
-@splatbot.command(name='喜愛的場地')
+@splatbot.command(name='喜愛')
 async def show_liked_map(ctx):
     user_id = str(ctx.author.id)
 
