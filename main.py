@@ -7,14 +7,14 @@ import datetime
 
 
 # * load essential json file
-with open('json\\bot_setting.json', mode = 'r', encoding = 'utf8') as jfile1, \
-     open('json\\ch_name.json', mode = 'r', encoding = 'utf8') as jfile2, \
-     open('json\\map_enum.json', mode = 'r', encoding = 'utf8') as jfile3, \
-     open('json\\find_map.json', mode = 'r', encoding = 'utf8') as jfile4:
+with open('json/bot_setting.json', mode = 'r', encoding = 'utf8') as jfile1, \
+     open('json/ch_name.json', mode = 'r', encoding = 'utf8') as jfile2, \
+     open('json/map_enum.json', mode = 'r', encoding = 'utf8') as jfile3, \
+     open('json/find_map.json', mode = 'r', encoding = 'utf8') as jfile4:
     setting, ch_name, map_enum, find_map = json.load(jfile1), json.load(jfile2), json.load(jfile3), json.load(jfile4)
 
 # * load user data
-with open('json\\user_data.json', mode = 'r', encoding = 'utf8') as jdata:
+with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
     user_data = json.load(jdata)
 
 # * function and variable
@@ -29,7 +29,7 @@ def get_map_name(m):
         return '.'
 
 def save_user_data():
-    with open('json\\user_data.json', mode = 'w', encoding = 'utf8') as jdata:
+    with open('json/user_data.json', mode = 'w', encoding = 'utf8') as jdata:
         json.dump(user_data, jdata)
 
 intents = discord.Intents.default()
@@ -179,8 +179,8 @@ async def game_alarm():
             
 
     if image_flag:
-        filename1 = 'images\\' + maps_gachi1.replace(' ', '') + '.png'
-        filename2 = 'images\\' + maps_gachi2.replace(' ', '') + '.png'
+        filename1 = 'images/' + maps_gachi1.replace(' ', '') + '.png'
+        filename2 = 'images/' + maps_gachi2.replace(' ', '') + '.png'
         image1 = discord.File(filename1)
         image2 = discord.File(filename2)
         bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}的場地不錯喔!'
