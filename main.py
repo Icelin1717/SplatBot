@@ -118,7 +118,7 @@ async def add_liked_map(ctx, *args):
         return
         
     if user_id not in user_data:
-        user_data[user_id] = {'likedmap': 0, 'starttime': 0, 'endtime': 24}
+        user_data[user_id] = setting['user_data_dafault']
     
     bot_message = ''
     for pre_map_name in args:
@@ -147,7 +147,7 @@ async def rm_liked_map(ctx, *args):
         return
         
     if user_id not in user_data:
-        user_data[user_id] = {'likedmap': 0, 'starttime': 0, 'endtime': 24}
+        user_data[user_id] = setting['user_data_dafault']
     
     bot_message = ''
     for pre_map_name in args:
@@ -166,13 +166,48 @@ async def rm_liked_map(ctx, *args):
     await ctx.reply(bot_message)
     save_user_data()
 
+@splatbot.command(name='時間')
+async def set_alarm_time(ctx, *args):
+    user_id = str(ctx.author.id)
+    
+    if user_id not in user_data:
+        user_data[user_id] = setting['user_data_dafault']
+    
+    bot_message = ''
+
+    if len(args) == 0:
+        bot_message += '用法: $時間 *[開始時間] [結束時間]*\n或是\n$時間 重設'
+
+    elif len(args) == 1:
+        if args[0] == '重設':
+            user_data[user_id]['starttime'] = 0
+            user_data[user_id]['endtime'] = 24
+        else:
+            bot_message += '用法: $時間 *[開始時間] [結束時間]*\n或是\n$時間 重設'
+
+    else:
+        if args[0].isnumeric() and args[1].isnumeric():
+            if 0 <= int(args[0]) <= 24 and 0 <= int(args[1]) <= 24:
+                user_data[user_id]['starttime'] = int(args[0])
+                user_data[user_id]['endtime'] = int(args[1])
+                bot_message += f'已將提醒時間設為{int(args[0])}時至{int(args[1])}' if int(args[0]) <= int(args[1]) else f'已將提醒時間設為{int(args[0])}時至隔日{int(args[1])}'
+            else:
+                bot_message += '時間需介於0時至24時之間'
+                
+        else:
+            bot_message += '時間請輸入數字'
+        
+
+    await ctx.reply(bot_message)
+    save_user_data()
+
 # Display user's liked map
 @splatbot.command(name='喜愛')
 async def show_liked_map(ctx):
     user_id = str(ctx.author.id)
 
     if user_id not in user_data:
-        user_data[user_id] = {'likedmap': 0, 'starttime': 0, 'endtime': 24}
+        user_data[user_id] = setting['user_data_dafault']
         save_user_data()
     
     if user_data[user_id]['likedmap'] == 0:
