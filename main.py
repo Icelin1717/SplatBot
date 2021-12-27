@@ -240,18 +240,21 @@ async def gachi_alarm():
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
     time_gachi = datetime.datetime.fromtimestamp(schedule['modes']['gachi'][1]['startTime'] + setting['timezone_delta'])
     alarm_channel = splatbot.get_channel(setting['alarm_channel_id'])
-    image_flag = False  # whether show the map image
 
     bot_message = ''
 
     for user_id in user_data:
         if user_data[user_id]['likedmap'] & map_enum[maps_gachi1] > 0 \
         or user_data[user_id]['likedmap'] & map_enum[maps_gachi2] > 0:
-            image_flag = True
-            user = await splatbot.fetch_user(int(user_id))
-            bot_message += f'{user.mention} '
+
+            starttime, endtime = user_data[user_id]['starttime'], user_data[user_id]['endtime']
+            currenttime = time_gachi.hour()
+            if (starttime <= currenttime - 1 and currenttime + 1 <= endtime) \
+            or (starttime >= endtime and (starttime <= currenttime - 1 or currenttime + 1 <= endtime)): # ! still some problems here
+                user = await splatbot.fetch_user(int(user_id))
+                bot_message += f'{user.mention} '
             
-    if image_flag:
+    if bot_message != '':
         filename1 = 'images/' + maps_gachi1.replace(' ', '') + '.png'
         filename2 = 'images/' + maps_gachi2.replace(' ', '') + '.png'
         image1 = discord.File(filename1)
