@@ -249,8 +249,8 @@ async def gachi_alarm():
 
             starttime, endtime = user_data[user_id]['starttime'], user_data[user_id]['endtime']
             currenttime = time_gachi.hour()
-            if (starttime <= currenttime - 1 and currenttime + 1 <= endtime) \
-            or (starttime >= endtime and (starttime <= currenttime - 1 or currenttime + 1 <= endtime)): # ! still some problems here
+            if (starttime <= currenttime + 1 and currenttime - 1 <= endtime) \
+            or (starttime >= endtime and (starttime <= currenttime + 1 or currenttime - 1 <= endtime)):
                 user = await splatbot.fetch_user(int(user_id))
                 bot_message += f'{user.mention} '
             
