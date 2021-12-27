@@ -21,8 +21,8 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 
 # * function and variable
 
+# Timestamp of last schedule (the starttime of onwarding one)
 last_schedule_timestamp = None
-
 # A dict save the map info retrieved from url.
 schedule = None
 # Alarm happen when True. This is set to True when schedule updated successfully.
@@ -87,7 +87,7 @@ async def usage(ctx):
 
 # Show current and next map schedule
 @splatbot.command(name='場地')
-async def info(ctx):
+async def map_info(ctx):
 
     check_schedule_update()
 
@@ -127,7 +127,7 @@ async def add_liked_map(ctx, *args):
         if map_name not in map_enum:
             bot_message += f'找不到場地名稱或編號 "{pre_map_name}" \n'
         
-        if (user_data[user_id]['likedmap'] & map_enum[map_name]) > 0:
+        elif (user_data[user_id]['likedmap'] & map_enum[map_name]) > 0:
             bot_message += f'{ch_name[map_name]} 已經是喜愛的場地了 \n'
         else:
             user_data[user_id]['likedmap'] += map_enum[map_name]
@@ -156,7 +156,7 @@ async def rm_liked_map(ctx, *args):
         if map_name not in map_enum:
             bot_message += f'找不到場地名稱或編號 "{pre_map_name}" \n'
         
-        if (user_data[user_id]['likedmap'] & map_enum[map_name]) == 0:
+        elif (user_data[user_id]['likedmap'] & map_enum[map_name]) == 0:
             bot_message += f'{ch_name[map_name]} 不是喜愛的場地 \n'
         else:
             user_data[user_id]['likedmap'] -= map_enum[map_name]
@@ -216,7 +216,6 @@ async def gachi_alarm():
             user = await splatbot.fetch_user(int(user_id))
             bot_message += f'{user.mention} '
             
-
     if image_flag:
         filename1 = 'images/' + maps_gachi1.replace(' ', '') + '.png'
         filename2 = 'images/' + maps_gachi2.replace(' ', '') + '.png'
@@ -226,6 +225,7 @@ async def gachi_alarm():
         bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}的場地不錯喔!{quote}'
         await alarm_channel.send(bot_message)
         await alarm_channel.send(files=[image1, image2])
+
 
 if __name__ == '__main__':
     splatbot.add_cog(Debug_Command(splatbot))

@@ -5,34 +5,18 @@ import requests, json
 class Debug_Command(commands.Cog):
     
     def __init__(self, bot):
-        self.bot = bot;
+        self.bot = bot
 
-
-    @commands.command()
-    async def debug(self, ctx):
-        await ctx.reply('This is a debug command\nhttps://twitter.com/SplatoonJP/status/1474303864828579850')
-
-    @commands.command()
-    async def info_origin(self, ctx):
-        url = requests.get('https://splatoon.ink/schedule2.json')
-        data = json.loads(url.text)
-
-        maps_regular = data['modes']['regular'][0]['maps']
-        maps_gachi = data['modes']['gachi'][0]['maps']
-        rule_gachi = data['modes']['gachi'][0]['rule']['name']
-        maps_league = data['modes']['league'][0]['maps']
-        rule_league = data['modes']['league'][0]['rule']['name']
-
-        await ctx.send(f'regular: {maps_regular} \n'
-            + f'gachi: {maps_gachi} ( {rule_gachi} ) \n'
-            + f'league: {maps_league} ( {rule_league} )')
+        with open('json/bot_setting.json', mode = 'r', encoding = 'utf8') as jfile1, \
+            open('json/ch_name.json', mode = 'r', encoding = 'utf8') as jfile2, \
+            open('json/map_enum.json', mode = 'r', encoding = 'utf8') as jfile3, \
+            open('json/find_map.json', mode = 'r', encoding = 'utf8') as jfile4:
+            self.setting = json.load(jfile1)
+            self.ch_name = json.load(jfile2)
+            self.map_enum = json.load(jfile3)
+            self.find_map = json.load(jfile4)
 
     @commands.command()
-    async def embedding(self, ctx):
-        embed = discord.Embed(
-            title = 'Maps',
-            colour = discord.Colour.random()
-        )
-        embed.set_image(url = 'https://cdn.wikimg.net/en/splatoonwiki/images/thumb/c/c9/S2_Stage_Inkblot_Art_Academy.png/300px-S2_Stage_Inkblot_Art_Academy.png')
-
-        await ctx.send(embed = embed)
+    async def alarm_test(self, ctx):
+        alarm_channel = self.bot.get_channel(self.setting['alarm_channel_id'])
+        await alarm_channel.send('DEBUG: This message should be displayed in alarm channel.')
