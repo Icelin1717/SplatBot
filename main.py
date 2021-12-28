@@ -30,7 +30,7 @@ alarm_trigger = False
 # A flag to ignore the first schedule update (schedule init) in alarm loop.
 schedule_first_check = True
 # Some funny quotes added in alarm.
-alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!', '該來打了吧?', '很期待你直播欸!']
+alarm_quote = ['趕快來打真劍吧!', '快來爬管吧!', '是不是要上X了!', '該來打了吧?', '很期待你直播欸!', '上X就是今天了', '上X的機會，走過路過千萬別錯過!']
 
 # schedule update handler
 def check_schedule_update():
@@ -118,7 +118,7 @@ async def add_liked_map(ctx, *args):
         return
         
     if user_id not in user_data:
-        user_data[user_id] = setting['user_data_dafault']
+        user_data[user_id] = setting['user_data_default']
     
     bot_message = ''
     for pre_map_name in args:
@@ -147,7 +147,7 @@ async def rm_liked_map(ctx, *args):
         return
         
     if user_id not in user_data:
-        user_data[user_id] = setting['user_data_dafault']
+        user_data[user_id] = setting['user_data_default']
     
     bot_message = ''
     for pre_map_name in args:
@@ -171,7 +171,7 @@ async def set_alarm_time(ctx, *args):
     user_id = str(ctx.author.id)
     
     if user_id not in user_data:
-        user_data[user_id] = setting['user_data_dafault']
+        user_data[user_id] = setting['user_data_default']
     
     bot_message = ''
 
@@ -182,6 +182,7 @@ async def set_alarm_time(ctx, *args):
         if args[0] == '重設':
             user_data[user_id]['starttime'] = 0
             user_data[user_id]['endtime'] = 24
+            bot_message += '已將提醒時間設為 任何時刻'
         else:
             bot_message += '用法: $時間 *[開始時間] [結束時間]*\n或是\n$時間 重設'
 
@@ -190,7 +191,7 @@ async def set_alarm_time(ctx, *args):
             if 0 <= int(args[0]) <= 24 and 0 <= int(args[1]) <= 24:
                 user_data[user_id]['starttime'] = int(args[0])
                 user_data[user_id]['endtime'] = int(args[1])
-                bot_message += f'已將提醒時間設為{int(args[0])}時至{int(args[1])}' if int(args[0]) <= int(args[1]) else f'已將提醒時間設為{int(args[0])}時至隔日{int(args[1])}'
+                bot_message += f'已將提醒時間設為{int(args[0])}時至{int(args[1])}時' if int(args[0]) <= int(args[1]) else f'已將提醒時間設為{int(args[0])}時至隔日{int(args[1])}時'
             else:
                 bot_message += '時間需介於0時至24時之間'
                 
@@ -207,7 +208,7 @@ async def show_liked_map(ctx):
     user_id = str(ctx.author.id)
 
     if user_id not in user_data:
-        user_data[user_id] = setting['user_data_dafault']
+        user_data[user_id] = setting['user_data_default']
         save_user_data()
     
     if user_data[user_id]['likedmap'] == 0:
@@ -238,6 +239,7 @@ async def gachi_alarm():
 
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
+    rule_gachi = schedule['modes']['gachi'][1]['rule']['name']
     time_gachi = datetime.datetime.fromtimestamp(schedule['modes']['gachi'][1]['startTime'] + setting['timezone_delta'])
     alarm_channel = splatbot.get_channel(setting['alarm_channel_id'])
 
@@ -248,9 +250,9 @@ async def gachi_alarm():
         or user_data[user_id]['likedmap'] & map_enum[maps_gachi2] > 0:
 
             starttime, endtime = user_data[user_id]['starttime'], user_data[user_id]['endtime']
-            currenttime = time_gachi.hour()
-            if (starttime <= currenttime + 1 and currenttime - 1 <= endtime) \
-            or (starttime >= endtime and (starttime <= currenttime + 1 or currenttime - 1 <= endtime)):
+            currenttime = time_gachi.hour
+            if (starttime <= endtime and (starttime <= currenttime + 1 and currenttime + 1 <= endtime)) \
+            or (starttime > endtime and (starttime <= currenttime + 1 or  currenttime + 1 <= endtime)):
                 user = await splatbot.fetch_user(int(user_id))
                 bot_message += f'{user.mention} '
             
@@ -260,7 +262,7 @@ async def gachi_alarm():
         image1 = discord.File(filename1)
         image2 = discord.File(filename2)
         quote = random.choice(alarm_quote)
-        bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}的場地不錯喔!{quote}'
+        bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}是{ch_name[rule_gachi]}，場地不錯喔!{quote}'
         await alarm_channel.send(bot_message)
         await alarm_channel.send(files=[image1, image2])
 
