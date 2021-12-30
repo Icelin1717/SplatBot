@@ -2,7 +2,6 @@
 
 import discord
 from discord.ext import commands, tasks
-from debug_command import Debug_Command
 import requests
 import json
 import datetime
@@ -221,7 +220,31 @@ async def show_liked_map(ctx):
     for i in range(23):
         if (user_data[user_id]['likedmap'] & 2**i) > 0:
             bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
+    
+    if user_data[user_id]['starttime'] <= user_data[user_id]['endtime']:
+        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至{user_data[user_id]["endtime"]}時'
+    else:
+        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至隔日{user_data[user_id]["endtime"]}時'
+
     await ctx.reply(bot_message)
+
+@splatbot.command()
+@commands.is_owner()
+async def reload_json(ctx):
+    global setting, ch_name, map_enum, find_map, user_data
+    with open('json/bot_setting.json', mode = 'r', encoding = 'utf8') as jfile1, \
+     open('json/ch_name.json', mode = 'r', encoding = 'utf8') as jfile2, \
+     open('json/map_enum.json', mode = 'r', encoding = 'utf8') as jfile3, \
+     open('json/find_map.json', mode = 'r', encoding = 'utf8') as jfile4:
+        setting, ch_name, map_enum, find_map = json.load(jfile1), json.load(jfile2), json.load(jfile3), json.load(jfile4)
+    with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
+        user_data = json.load(jdata)
+
+@splatbot.command()
+@commands.is_owner()
+async def reload_ext(ctx):
+    splatbot.unload_extension('ext.debug_command')
+    splatbot.load_extension('ext.debug_command')
 
 # Gachi alarm loop
 @tasks.loop(minutes = 5)
@@ -270,6 +293,6 @@ async def gachi_alarm():
 
 
 if __name__ == '__main__':
-    splatbot.add_cog(Debug_Command(splatbot))
+    splatbot.load_extension('ext.debug_command')
     gachi_alarm.start()
     splatbot.run(setting['TOKEN'])
