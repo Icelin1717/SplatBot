@@ -43,7 +43,8 @@ def check_schedule_update():
         url = requests.get(setting['schedule_url'])
         schedule = json.loads(url.text)
         last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
-        print(' - a GET request is called to retrieve the schedule')
+        print(' - a GET request is called to retrieve the schedule.' \
+            + f'   - Schedule TimeStamp: {last_schedule_timestamp}')
         alarm_trigger = True
     
     if schedule_first_check == True:
@@ -71,6 +72,7 @@ splatbot = commands.Bot(command_prefix = '$',intents = intents)
 @splatbot.event
 async def on_ready():
     print('--- We have logged in as {0.user} ---'.format(splatbot))
+    gachi_alarm.start()
 
 # Chinese help
 @splatbot.command(name='說明')
@@ -82,6 +84,8 @@ async def usage(ctx):
         + '$移除 : 移除喜愛的場地 \n' \
         + ' - 用法 : $移除 [場地1] [場地2] [場地3]... \n' \
         + '$喜愛 : 顯示目前喜愛的場地列表 \n' \
+        + '$時間 : 設定小管家只提醒特定時段 \n' \
+        + ' - 用法 : $時間 [開始時間] [結束時間] / $時間 重設 \n' \
         + '\n' \
         + 'SplatBot會在您喜歡的場地出現在真劍時通知您，必要時也會情勒您。```' \
     )
@@ -262,6 +266,8 @@ async def gachi_alarm():
     if first_check:
         return
 
+    print(' - Executing alarm process...')
+
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
     rule_gachi = schedule['modes']['gachi'][1]['rule']['name']
@@ -290,9 +296,11 @@ async def gachi_alarm():
         bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}是{ch_name[rule_gachi]}，場地不錯喔!{quote}'
         await alarm_channel.send(bot_message)
         await alarm_channel.send(files=[image1, image2])
+        print('   - Some receive the alarm.')
+    else :
+        print('   - Nobody receives the alarm.')
 
 
 if __name__ == '__main__':
     splatbot.load_extension('ext.debug_command')
-    gachi_alarm.start()
     splatbot.run(setting['TOKEN'])
