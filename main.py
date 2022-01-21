@@ -2,7 +2,6 @@
 
 import discord
 from discord.ext import commands, tasks
-from debug_command import Debug_Command
 import requests
 import json
 import datetime
@@ -24,7 +23,7 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 # * function and variable
 
 # Timestamp of last schedule (the starttime of onwarding one)
-last_schedule_timestamp = None
+last_schedule_timestamp = 0
 # A dict save the map info retrieved from url.
 schedule = None
 # Alarm happen when True. This is set to True when schedule updated successfully.
@@ -39,12 +38,13 @@ def check_schedule_update():
     global last_schedule_timestamp, alarm_trigger, schedule_first_check
     current_timestamp = int(datetime.datetime.now().timestamp())
 
-    if last_schedule_timestamp == None or math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
+    if math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
         global schedule
         url = requests.get(setting['schedule_url'])
         schedule = json.loads(url.text)
         last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
-        print(' - a GET request is called to retrieve the schedule')
+        print(' - a GET request is called to retrieve the schedule.' \
+            + f'   - Schedule TimeStamp: {last_schedule_timestamp}')
         alarm_trigger = True
     
     if schedule_first_check == True:
@@ -72,6 +72,10 @@ splatbot = commands.Bot(command_prefix = '$',intents = intents)
 @splatbot.event
 async def on_ready():
     print('--- We have logged in as {0.user} ---'.format(splatbot))
+    check_schedule_update()
+    global alarm_trigger
+    alarm_trigger = False
+    gachi_alarm.start()
 
 # Chinese help
 @splatbot.command(name='說明')
@@ -83,6 +87,8 @@ async def usage(ctx):
         + '$移除 : 移除喜愛的場地 \n' \
         + ' - 用法 : $移除 [場地1] [場地2] [場地3]... \n' \
         + '$喜愛 : 顯示目前喜愛的場地列表 \n' \
+        + '$時間 : 設定小管家只提醒特定時段 \n' \
+        + ' - 用法 : $時間 [開始時間] [結束時間] / $時間 重設 \n' \
         + '\n' \
         + 'SplatBot會在您喜歡的場地出現在真劍時通知您，必要時也會情勒您。```' \
     )
@@ -221,7 +227,31 @@ async def show_liked_map(ctx):
     for i in range(23):
         if (user_data[user_id]['likedmap'] & 2**i) > 0:
             bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
+    
+    if user_data[user_id]['starttime'] <= user_data[user_id]['endtime']:
+        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至{user_data[user_id]["endtime"]}時'
+    else:
+        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至隔日{user_data[user_id]["endtime"]}時'
+
     await ctx.reply(bot_message)
+
+@splatbot.command()
+@commands.is_owner()
+async def reload_json(ctx):
+    global setting, ch_name, map_enum, find_map, user_data
+    with open('json/bot_setting.json', mode = 'r', encoding = 'utf8') as jfile1, \
+     open('json/ch_name.json', mode = 'r', encoding = 'utf8') as jfile2, \
+     open('json/map_enum.json', mode = 'r', encoding = 'utf8') as jfile3, \
+     open('json/find_map.json', mode = 'r', encoding = 'utf8') as jfile4:
+        setting, ch_name, map_enum, find_map = json.load(jfile1), json.load(jfile2), json.load(jfile3), json.load(jfile4)
+    with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
+        user_data = json.load(jdata)
+
+@splatbot.command()
+@commands.is_owner()
+async def reload_ext(ctx):
+    splatbot.unload_extension('ext.debug_command')
+    splatbot.load_extension('ext.debug_command')
 
 # Gachi alarm loop
 @tasks.loop(minutes = 5)
@@ -230,14 +260,13 @@ async def gachi_alarm():
     await splatbot.wait_until_ready()
     global alarm_trigger
     
-    first_check = check_schedule_update()
+    check_schedule_update()
 
     if alarm_trigger == False:
         return
     alarm_trigger = False
 
-    if first_check:
-        return
+    print(' - Executing alarm process...')
 
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
@@ -267,9 +296,11 @@ async def gachi_alarm():
         bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}是{ch_name[rule_gachi]}，場地不錯喔!{quote}'
         await alarm_channel.send(bot_message)
         await alarm_channel.send(files=[image1, image2])
+        print('   - Some receive the alarm.')
+    else :
+        print('   - Nobody receives the alarm.')
 
 
 if __name__ == '__main__':
-    splatbot.add_cog(Debug_Command(splatbot))
-    gachi_alarm.start()
+    splatbot.load_extension('ext.debug_command')
     splatbot.run(setting['TOKEN'])

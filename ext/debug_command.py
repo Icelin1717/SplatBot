@@ -1,6 +1,5 @@
-import discord
 from discord.ext import commands
-import requests, json
+import json
 
 class Debug_Command(commands.Cog):
     
@@ -20,3 +19,13 @@ class Debug_Command(commands.Cog):
     async def alarm_test(self, ctx):
         alarm_channel = self.bot.get_channel(self.setting['alarm_channel_id'])
         await alarm_channel.send('DEBUG: This message should be displayed in alarm channel.')
+
+    @commands.command()
+    async def go_send(self, ctx, msg):
+        alarm_channel = self.bot.get_channel(self.setting['alarm_channel_id'])
+        await alarm_channel.send(msg)
+
+
+
+def setup(bot):
+    bot.add_cog(Debug_Command(bot))
