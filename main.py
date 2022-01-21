@@ -23,7 +23,7 @@ with open('json/user_data.json', mode = 'r', encoding = 'utf8') as jdata:
 # * function and variable
 
 # Timestamp of last schedule (the starttime of onwarding one)
-last_schedule_timestamp = None
+last_schedule_timestamp = 0
 # A dict save the map info retrieved from url.
 schedule = None
 # Alarm happen when True. This is set to True when schedule updated successfully.
@@ -38,7 +38,7 @@ def check_schedule_update():
     global last_schedule_timestamp, alarm_trigger, schedule_first_check
     current_timestamp = int(datetime.datetime.now().timestamp())
 
-    if last_schedule_timestamp == None or math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
+    if math.floor(last_schedule_timestamp/7200) < math.floor(current_timestamp/7200):
         global schedule
         url = requests.get(setting['schedule_url'])
         schedule = json.loads(url.text)
@@ -72,6 +72,9 @@ splatbot = commands.Bot(command_prefix = '$',intents = intents)
 @splatbot.event
 async def on_ready():
     print('--- We have logged in as {0.user} ---'.format(splatbot))
+    check_schedule_update()
+    global alarm_trigger
+    alarm_trigger = False
     gachi_alarm.start()
 
 # Chinese help
@@ -257,14 +260,11 @@ async def gachi_alarm():
     await splatbot.wait_until_ready()
     global alarm_trigger
     
-    first_check = check_schedule_update()
+    check_schedule_update()
 
     if alarm_trigger == False:
         return
     alarm_trigger = False
-
-    if first_check:
-        return
 
     print(' - Executing alarm process...')
 
