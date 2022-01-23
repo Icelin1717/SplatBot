@@ -43,8 +43,8 @@ def check_schedule_update():
         url = requests.get(setting['schedule_url'])
         schedule = json.loads(url.text)
         last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
-        print(' - a GET request is called to retrieve the schedule.' \
-            + f'   - Schedule TimeStamp: {last_schedule_timestamp}')
+        print(' - a GET request is called to retrieve the schedule.')
+        print('   - Schedule TimeStamp: {last_schedule_timestamp}')
         alarm_trigger = True
     
     if schedule_first_check == True:
