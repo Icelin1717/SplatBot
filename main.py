@@ -1,4 +1,4 @@
-# version 1.1.1 
+# version 1.1.3
 
 import discord
 from discord.ext import commands, tasks
