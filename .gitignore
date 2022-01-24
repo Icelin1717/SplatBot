@@ -132,3 +132,5 @@ dmypy.json
 .vscode/
 json/user_data.json
 json/bot_setting.json
+
+log.txt

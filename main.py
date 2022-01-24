@@ -43,8 +43,8 @@ def check_schedule_update():
         url = requests.get(setting['schedule_url'])
         schedule = json.loads(url.text)
         last_schedule_timestamp = schedule['modes']['regular'][0]['startTime']
-        print(' - a GET request is called to retrieve the schedule.')
-        print('   - Schedule TimeStamp: {last_schedule_timestamp}')
+        write_log(' - a GET request is called to retrieve the schedule.')
+        write_log(f'   - Schedule TimeStamp: {last_schedule_timestamp}')
         alarm_trigger = True
     
     if schedule_first_check == True:
@@ -65,13 +65,22 @@ def save_user_data():
     with open('json/user_data.json', mode = 'w', encoding = 'utf8') as jdata:
         json.dump(user_data, jdata)
 
+# log
+def write_log(content):
+    f = open('log.txt', 'a')
+    time = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() + setting['timezone_delta'])
+    f.write(f'{time.strftime("%Y/%m/%d %H:%M")}: {content}\n')
+    f.close()
+    print(content)
+
+
 intents = discord.Intents.default()
 splatbot = commands.Bot(command_prefix = '$',intents = intents)
 
 # Init setup
 @splatbot.event
 async def on_ready():
-    print('--- We have logged in as {0.user} ---'.format(splatbot))
+    write_log('--- We have logged in as {0.user} ---'.format(splatbot))
     check_schedule_update()
     global alarm_trigger
     alarm_trigger = False
@@ -139,7 +148,7 @@ async def add_liked_map(ctx, *args):
             bot_message += f'{ch_name[map_name]} 已經是喜愛的場地了 \n'
         else:
             user_data[user_id]['likedmap'] += map_enum[map_name]
-            print(f' - "{ctx.author.name}" added "{map_name}({ch_name[map_name]})" to liked map')
+            write_log(f' - "{ctx.author.name}" added "{map_name}({ch_name[map_name]})" to liked map')
             bot_message += f'新增喜愛的場地 {ch_name[map_name]} \n'
 
     await ctx.reply(bot_message)
@@ -168,7 +177,7 @@ async def rm_liked_map(ctx, *args):
             bot_message += f'{ch_name[map_name]} 不是喜愛的場地 \n'
         else:
             user_data[user_id]['likedmap'] -= map_enum[map_name]
-            print(f' - "{ctx.author.name}" removed "{map_name}({ch_name[map_name]})" from liked map')
+            write_log(f' - "{ctx.author.name}" removed "{map_name}({ch_name[map_name]})" from liked map')
             bot_message += f'從喜愛的場地中移除 {ch_name[map_name]} \n'
 
     await ctx.reply(bot_message)
@@ -266,7 +275,7 @@ async def gachi_alarm():
         return
     alarm_trigger = False
 
-    print(' - Executing alarm process...')
+    write_log(' - Executing alarm process...')
 
     maps_gachi1 = schedule['modes']['gachi'][1]['maps'][0]
     maps_gachi2 = schedule['modes']['gachi'][1]['maps'][1]
@@ -296,9 +305,9 @@ async def gachi_alarm():
         bot_message += f'\n{time_gachi.strftime("%Y/%m/%d %H:%M")}是{ch_name[rule_gachi]}，場地不錯喔!{quote}'
         await alarm_channel.send(bot_message)
         await alarm_channel.send(files=[image1, image2])
-        print('   - Some receive the alarm.')
+        write_log('   - Some receive the alarm.')
     else :
-        print('   - Nobody receives the alarm.')
+        write_log('   - Nobody receives the alarm.')
 
 
 if __name__ == '__main__':
