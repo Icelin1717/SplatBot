@@ -183,6 +183,65 @@ async def rm_liked_map(ctx, *args):
     await ctx.reply(bot_message)
     save_user_data()
 
+# Add rejected map for a user
+@splatbot.command(name='討厭')
+async def add_rejected_map(ctx, *args):
+    user_id = str(ctx.author.id)
+    
+    if len(args) == 0:
+        await ctx.reply('用法: $討厭 *[場地1] [場地2] [場地3]*...')
+        return
+        
+    if user_id not in user_data:
+        user_data[user_id] = setting['user_data_default']
+    
+    bot_message = ''
+    for pre_map_name in args:
+        map_name = get_map_name(pre_map_name)
+
+        if map_name not in map_enum:
+            bot_message += f'找不到場地名稱或編號 "{pre_map_name}" \n'
+        
+        elif (user_data[user_id]['rejectedmap'] & map_enum[map_name]) > 0:
+            bot_message += f'{ch_name[map_name]} 已經被你討厭了! \n'
+        else:
+            user_data[user_id]['rejectedmap'] += map_enum[map_name]
+            write_log(f' - "{ctx.author.name}" added "{map_name}({ch_name[map_name]})" to rejected map')
+            bot_message += f'新增討厭的場地 {ch_name[map_name]} \n'
+
+    await ctx.reply(bot_message)
+    save_user_data()
+
+# Remove rejected map for a user
+@splatbot.command(name='不討厭')
+async def rm_rejected_map(ctx, *args):
+    user_id = str(ctx.author.id)
+    
+    if len(args) == 0:
+        await ctx.reply('用法: $不討厭 *[場地1] [場地2] [場地3]*...')
+        return
+        
+    if user_id not in user_data:
+        user_data[user_id] = setting['user_data_default']
+    
+    bot_message = ''
+    for pre_map_name in args:
+        map_name = get_map_name(pre_map_name)
+
+        if map_name not in map_enum:
+            bot_message += f'找不到場地名稱或編號 "{pre_map_name}" \n'
+        
+        elif (user_data[user_id]['rejectedmap'] & map_enum[map_name]) == 0:
+            bot_message += f'{ch_name[map_name]} 不是討厭的場地 \n'
+        else:
+            user_data[user_id]['rejectedmap'] -= map_enum[map_name]
+            write_log(f' - "{ctx.author.name}" removed "{map_name}({ch_name[map_name]})" from rejected map')
+            bot_message += f'從討厭的場地中移除 {ch_name[map_name]} \n'
+
+    await ctx.reply(bot_message)
+    save_user_data()
+
+# Set alarm time for a user
 @splatbot.command(name='時間')
 async def set_alarm_time(ctx, *args):
     user_id = str(ctx.author.id)
@@ -219,24 +278,32 @@ async def set_alarm_time(ctx, *args):
     await ctx.reply(bot_message)
     save_user_data()
 
-# Display user's liked map
+# Display user's liked map and rejected map
 @splatbot.command(name='喜愛')
 async def show_liked_map(ctx):
     user_id = str(ctx.author.id)
+    bot_message = ''
 
     if user_id not in user_data:
         user_data[user_id] = setting['user_data_default']
         save_user_data()
     
     if user_data[user_id]['likedmap'] == 0:
-        await ctx.reply('目前沒有喜愛的場地')
-        return
-
-    bot_message = '目前喜愛的場地 : \n'
-    for i in range(23):
-        if (user_data[user_id]['likedmap'] & 2**i) > 0:
-            bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
+        bot_message += '目前沒有喜愛的場地'
+    else:
+        bot_message += '目前喜愛的場地 : \n'
+        for i in range(23):
+            if (user_data[user_id]['likedmap'] & 2**i) > 0:
+                bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
     
+    if user_data[user_id]['rejectedmap'] == 0:
+        bot_message += '目前沒有討厭的場地'
+    else:
+        bot_message += '目前討厭的場地 : \n'
+        for i in range(23):
+            if (user_data[user_id]['rejectedmap'] & 2**i) > 0:
+                bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
+
     if user_data[user_id]['starttime'] <= user_data[user_id]['endtime']:
         bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至{user_data[user_id]["endtime"]}時'
     else:
@@ -286,6 +353,10 @@ async def gachi_alarm():
     bot_message = ''
 
     for user_id in user_data:
+        if user_data[user_id]['rejected'] & map_enum[maps_gachi1] > 0 \
+        or user_data[user_id]['rejected'] & map_enum[maps_gachi2] > 0:
+            continue
+
         if user_data[user_id]['likedmap'] & map_enum[maps_gachi1] > 0 \
         or user_data[user_id]['likedmap'] & map_enum[maps_gachi2] > 0:
 
