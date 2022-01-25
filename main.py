@@ -293,7 +293,7 @@ async def show_liked_map(ctx):
         save_user_data()
     
     if user_data[user_id]['likedmap'] == 0:
-        bot_message += '目前沒有喜愛的場地'
+        bot_message += '目前沒有喜愛的場地\n'
     else:
         bot_message += '目前喜愛的場地 : \n'
         for i in range(23):
@@ -301,7 +301,7 @@ async def show_liked_map(ctx):
                 bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
     
     if user_data[user_id]['rejectedmap'] == 0:
-        bot_message += '目前沒有討厭的場地'
+        bot_message += '目前沒有討厭的場地\n'
     else:
         bot_message += '目前討厭的場地 : \n'
         for i in range(23):
@@ -309,9 +309,9 @@ async def show_liked_map(ctx):
                 bot_message += ch_name[get_map_name(str(i+1))] + ' \n'
 
     if user_data[user_id]['starttime'] <= user_data[user_id]['endtime']:
-        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至{user_data[user_id]["endtime"]}時'
+        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至{user_data[user_id]["endtime"]}時\n'
     else:
-        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至隔日{user_data[user_id]["endtime"]}時'
+        bot_message += f'目前設定的時間 : {user_data[user_id]["starttime"]}時至隔日{user_data[user_id]["endtime"]}時\n'
 
     await ctx.reply(bot_message)
 
@@ -357,8 +357,8 @@ async def gachi_alarm():
     bot_message = ''
 
     for user_id in user_data:
-        if user_data[user_id]['rejected'] & map_enum[maps_gachi1] > 0 \
-        or user_data[user_id]['rejected'] & map_enum[maps_gachi2] > 0:
+        if user_data[user_id]['rejectedmap'] & map_enum[maps_gachi1] > 0 \
+        or user_data[user_id]['rejectedmap'] & map_enum[maps_gachi2] > 0:
             continue
 
         if user_data[user_id]['likedmap'] & map_enum[maps_gachi1] > 0 \
